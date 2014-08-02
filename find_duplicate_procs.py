@@ -48,6 +48,28 @@ def getProcsFromFile(filename):
     #print "file " + filename + " len " + str(len(procList))
     return procList
 
+def getProcsFromRepo():
+    """
+    1- Go through listOfDirs and in each dir find the list of tcl files.
+    """
+    listOfDirs = ['/home/manid/wss/library']
+
+    procList = []
+    for testDir in listOfDirs:
+        for filename in glob.glob(testDir+'/*.tcl'):
+            procList = getProcsFromFile(filename)
+
+        for root, dirnames, files in os.walk(testDir):
+            for dirname in dirnames:
+                if dirname == "CVS":
+                    continue
+
+                for filename in glob.glob(os.path.join(root, dirname)+'/*.tcl'):
+                    procList = procList + getProcsFromFile(filename)
+
+    #print "procList " + str(procList) + " :END"
+    return procList
+
 for arg in sys.argv[1:]:
     #print "arg is " + arg
     #changedFile, oldVer, newVer = arg.split(',')
